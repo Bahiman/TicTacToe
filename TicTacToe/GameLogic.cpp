@@ -11,7 +11,6 @@ void GameLogic::checkForWin(Player* myPlayer)
 	auto* myFieldsVector = new std::vector<int>{};
 
 	myFieldsVector->assign(myPlayer->playerFields, myPlayer->playerFields + myPlayer->occupied_fields);
-
 	std::sort(myFieldsVector->begin(), myFieldsVector->end());
 
 	std::string* myFieldString = new std::string();
@@ -85,12 +84,13 @@ int GameLogic::occupy(Field** myFields, int indexToMark, Player* thePLayer)
 
 bool GameLogic::checkForOccupied(Field** myField, int indexToCheck)
 {
-	if (myField[indexToCheck]->occupied != nullptr)
+	if (myField[indexToCheck]->occupied == nullptr)
 	{
-		return true;
+		return false;
 	} 
 	else
 	{
-		return false;
+
+		return true;
 	}
 }

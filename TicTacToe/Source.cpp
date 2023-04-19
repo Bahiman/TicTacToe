@@ -3,16 +3,22 @@
 
 int main()
 {
-	PlayerInteraction p;
+	PlayerInteraction* p = new PlayerInteraction;
 
-	Player** players = p.myPlayers();
+	Player** players = (*p).myPlayers();
 
-	Player* playerOne = players[0];
+	Player* playerOne = *players;
 
-	Player* playerTwo = players[1];
+	Player* playerTwo = nullptr;
+
+	bool dualPlayer = playerOne->mode == false;
+
+	if (dualPlayer)
+	{
+		playerTwo = players[1];
+	}
 
 	(*playerOne)();
-	(*playerTwo)();
 
 	std::cout << "Note that the coordinates look like this:" << std::endl;
 
@@ -22,7 +28,19 @@ int main()
 	
 	Field** board = new Field*[9];
 
-	p.fillTheBoard(&board);
+	AI* ai = new AI();
+
+	p->fillTheBoard(&board);
 	
-	p(board,playerOne,playerTwo);
+	if (dualPlayer)
+	{
+		(*p)(board,playerOne,playerTwo);
+	} 
+	else
+	{
+		p->AIInteraction(board, playerOne, ai);
+
+		// 
+	}
+
 }

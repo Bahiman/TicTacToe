@@ -16,7 +16,7 @@ public:
 
 	int occupy(Field** myFields, int indexToMark, Player* thePLayer);
 
-private:
+protected:
 	std::string** winningCombinations = new std::string* [8]
 	{	new std::string("048"),
 		new std::string("036"),
