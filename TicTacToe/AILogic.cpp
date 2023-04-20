@@ -93,8 +93,6 @@ int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 		{
 			size_t index = winningCombinations[f]->find(*myFieldString);
 
-			std::cout << *myFieldString << "()" << std::endl;
-
 			if (index != std::string::npos)
 			{
 				std::string* myStringCopy = new std::string (*winningCombinations[f]);
@@ -111,7 +109,6 @@ int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 
 			if (field_->occupied == nullptr)
 			{
-				std::cout << static_cast<char>(field_->coordinate + '0') << " is the c" << field_->coordinate << std::endl;
 				unOccupiedFields->push_back(static_cast<char>(field_->coordinate + '0'));
 			}
 		}
@@ -190,7 +187,6 @@ int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 
 				if (field_->occupied == nullptr)
 				{
-					std::cout << static_cast<char>(field_->coordinate + '0') << " is the c" << field_->coordinate << std::endl;
 					unOccupiedFields->push_back(static_cast<char>(field_->coordinate + '0'));
 				}
 			}
@@ -249,8 +245,6 @@ int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
 	for (auto f = 0; f < 8; f++)
 	{
 
-		std::cout << *myFieldString <<" " << *winningCombinations[f] << "{{\n";
-
 		auto m = [](std::string* num, std::string* target) {
 
 			int myNigga[2] = {};
@@ -261,7 +255,6 @@ int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
 			{
 				for (int j = 0; j < num->size(); j++)
 				{
-					std::cout << (*num)[j] << "|888|" << (*target)[i] << std::endl;
 
 					if ((*num)[j] == (*target)[i])
 					{
@@ -269,19 +262,15 @@ int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
 						if (counter == 1)
 						{
 							myNigga[0] = i;
-							std::cout << myNigga[0] << " SE" << std::endl;
 						}
 						else if (counter == 2)
 						{
 							myNigga[1] = i;
-							std::cout << myNigga[1] << " SE" << std::endl;
 
 						}
 					}
 				}
 			}
-
-			std::cout << "Countie" << " " << counter << std::endl;
 
 			if (counter == 2)
 			{
@@ -303,14 +292,9 @@ int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
 		if (m(myFieldString, myCopy))
 		{
 			myLeftVector->push_back((*myCopy)[0]);
-			std::cout << "MMM" << "| " << *myCopy << std::endl;
 			delete myCopy;
-			std::cout << "=+=" << std::endl;
 		}
 	}
-
-	std::cout << myLeftVector->size() << 123123 << std::endl;
-
 
 	auto* unOccupiedFields = new std::vector<char>();
 
@@ -321,7 +305,6 @@ int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
 		if (field_->occupied == nullptr)
 		{
 			unOccupiedFields->push_back(static_cast<char>(field_->coordinate + '0'));
-			std::cout << static_cast<char>(field_->coordinate + '0') << "||||||||" << std::endl;
 		}
 	}
 
@@ -331,9 +314,6 @@ int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
 	{
 		for (auto kk : *unOccupiedFields)
 		{
-			std::cout << k << kk << "[[[\n";
-
-
 			if (k == kk)
 			{
 				int r = static_cast<int>(kk - '0');
@@ -445,8 +425,6 @@ int AILogic::findTheBestMoveForPLayer_(Player* ai, Field** field)
 		for (auto f = 0; f < 8; f++)
 		{
 
-			std::cout << *myFieldString << " " << *winningCombinations[f] << "{{\n";
-
 			auto m = [](std::string* num, std::string* target) {
 
 				int myNigga[2] = {};
@@ -457,7 +435,6 @@ int AILogic::findTheBestMoveForPLayer_(Player* ai, Field** field)
 				{
 					for (int j = 0; j < num->size(); j++)
 					{
-						std::cout << (*num)[j] << "|888|" << (*target)[i] << std::endl;
 
 						if ((*num)[j] == (*target)[i])
 						{
@@ -465,19 +442,15 @@ int AILogic::findTheBestMoveForPLayer_(Player* ai, Field** field)
 							if (counter == 1)
 							{
 								myNigga[0] = i;
-								std::cout << myNigga[0] << " SE" << std::endl;
 							}
 							else if (counter == 2)
 							{
 								myNigga[1] = i;
-								std::cout << myNigga[1] << " SE" << std::endl;
 
 							}
 						}
 					}
 				}
-
-				std::cout << "Countie" << " " << counter << std::endl;
 
 				if (counter == 2)
 				{
@@ -499,9 +472,7 @@ int AILogic::findTheBestMoveForPLayer_(Player* ai, Field** field)
 			if (m(myFieldString, myCopy))
 			{
 				myLeftVector->push_back((*myCopy)[0]);
-				std::cout << "MMM" << "| " << *myCopy << std::endl;
 				delete myCopy;
-				std::cout << "=+=" << std::endl;
 			}
 		}
 
@@ -519,7 +490,6 @@ int AILogic::findTheBestMoveForPLayer_(Player* ai, Field** field)
 			if (field_->occupied == nullptr)
 			{
 				unOccupiedFields->push_back(static_cast<char>(field_->coordinate + '0'));
-				std::cout << static_cast<char>(field_->coordinate + '0') << "||||||||" << std::endl;
 			}
 		}
 
@@ -529,9 +499,6 @@ int AILogic::findTheBestMoveForPLayer_(Player* ai, Field** field)
 		{
 			for (auto kk : *unOccupiedFields)
 			{
-				std::cout << k << kk << "[[[\n";
-
-
 				if (k == kk)
 				{
 					int r = static_cast<int>(kk - '0');
@@ -545,61 +512,6 @@ int AILogic::findTheBestMoveForPLayer_(Player* ai, Field** field)
 		delete myFieldString;
 
 		delete myLeftVector;
-
-		auto contains = [unOccupiedFields](int r)
-		{
-			if (std::find(unOccupiedFields->begin(), unOccupiedFields->end(), r) != unOccupiedFields->end())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		};
-
-		for (auto k : *myIntVector)
-		{
-			if (k == 0 || k == 2 || k == 6 || k == 8)
-			{
-				switch (k)
-				{
-
-				case 0:
-					if (contains(0))
-					{
-						return 6;
-					}
-					break;
-
-				case 2:
-					if (contains(2))
-					{
-						return 8;
-					}
-					break;
-
-				case 6:
-					if (contains(6))
-					{
-						return 0;
-					}
-					break;
-
-				case 8:
-
-					if (contains(8))
-					{
-						return 2;
-					}
-
-					break;
-
-				default:
-					break;
-				}
-			}
-		}
 
 		return static_cast<int>((*unOccupiedFields)[0] + '0');
 	}
