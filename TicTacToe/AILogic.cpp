@@ -1,7 +1,9 @@
 #include "AILogic.h"
+#include <unordered_set>
 
 int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 {
+
 	if (!ai->occupied_fields) 
 	{
 		return 4;
@@ -91,12 +93,13 @@ int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 		{
 			size_t index = winningCombinations[f]->find(*myFieldString);
 
+			std::cout << *myFieldString << "()" << std::endl;
+
 			if (index != std::string::npos)
 			{
-				auto* myStringCopy = winningCombinations[f];
+				std::string* myStringCopy = new std::string (*winningCombinations[f]);
 				myStringCopy->erase(index, myFieldString->length());
 				myLeftVector->push_back((*myStringCopy)[0]);
-				//delete myStringCopy;
  			}
 		}
 		
@@ -119,15 +122,9 @@ int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 			{
 				if (k == kk)
 				{
-					int r = kk - '0';
-
-					std::cout << r << "???" << k;
+					int r = static_cast<int>(kk - '0');
 
 					return r; 
-				}
-				else
-				{
-					std::cout << kk << "!!!" << std::endl;
 				}
 			}
 		}
@@ -135,14 +132,104 @@ int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 		delete myLeftVector;
 
 		delete unOccupiedFields;
+
+		return findTheBestMoveForPLayer(player, field);
 	}
+	else if (ai->occupied_fields == 3)
+	{
+		auto* stringSet = new std::set<std::string*>{};
+
+		auto* myIntVector = new std::vector<int>{};// get the fields of the ai into a vector
+
+		myIntVector->assign(ai->playerFields, ai->playerFields + ai->occupied_fields);
+
+		std::sort(myIntVector->begin(), myIntVector->end());
+
+		for (int i = 0; i < myIntVector->size(); i++)
+		{
+			for (int j = 0; j < myIntVector->size(); j++)
+			{
+				if (i != j)
+				{
+
+					std::string f = "";
+
+					f += static_cast<char>(i + '0');
+
+					f += static_cast<char>(j + '0');
+
+					stringSet->insert(&f);
+				}
+			}
+		}
+
+		delete myIntVector;
+		
+		for (auto myFieldString : *stringSet)
+		{
+			auto* myLeftVector = new std::vector<char>();
+
+			for (auto f = 0; f < 8; f++)
+			{
+				size_t index = winningCombinations[f]->find(*myFieldString);
+
+				if (index != std::string::npos)
+				{
+					std::string** myStringCopy = new std::string * (winningCombinations[f]);
+					(*myStringCopy)->erase(index, myFieldString->length());
+					myLeftVector->push_back((*(*myStringCopy))[0]);
+						delete myStringCopy;
+				}
+			}
+
+			auto* unOccupiedFields = new std::vector<char>();
+
+			for (auto i = 0; i < 9; i++)
+			{
+				auto field_ = (field)[i];
+
+				if (field_->occupied == nullptr)
+				{
+					std::cout << static_cast<char>(field_->coordinate + '0') << " is the c" << field_->coordinate << std::endl;
+					unOccupiedFields->push_back(static_cast<char>(field_->coordinate + '0'));
+				}
+			}
+
+			for (auto k : *myLeftVector)
+			{
+				for (auto kk : *unOccupiedFields)
+				{
+					if (k == kk)
+					{
+						int r = static_cast<int>(kk - '0');
+
+						return r;
+					}
+				}
+			}
+
+			delete myLeftVector;
+
+			delete unOccupiedFields;
+		}
 
 
-
+		findTheBestMoveForPLayer_(player, field);
+	} 
+	else 
+	{
+		return 999;
+	}
+	
 }
 
 int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
+
 {
+	(*player)();
+	std::cout << 2 << std::endl;
+
+
 	auto* myIntVector = new std::vector<int>{};// get the fields of the player into a vector
 
 	myIntVector->assign(player->playerFields, player->playerFields + player->occupied_fields);
@@ -156,46 +243,101 @@ int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
 		*myFieldString += std::to_string(l);
 	}
 
-	delete myIntVector;
 
 	auto* myLeftVector = new std::vector<char>();
 
 	for (auto f = 0; f < 8; f++)
 	{
-		size_t index = winningCombinations[f]->find(*myFieldString);
 
-		if (index != std::string::npos)
+		std::cout << *myFieldString <<" " << *winningCombinations[f] << "{{\n";
+
+		auto m = [](std::string* num, std::string* target) {
+
+			int myNigga[2] = {};
+
+			int counter = 0;
+
+			for (int i = 0; i < (*target).size() ; i++)
+			{
+				for (int j = 0; j < num->size(); j++)
+				{
+					std::cout << (*num)[j] << "|888|" << (*target)[i] << std::endl;
+
+					if ((*num)[j] == (*target)[i])
+					{
+						counter++;
+						if (counter == 1)
+						{
+							myNigga[0] = i;
+							std::cout << myNigga[0] << " SE" << std::endl;
+						}
+						else if (counter == 2)
+						{
+							myNigga[1] = i;
+							std::cout << myNigga[1] << " SE" << std::endl;
+
+						}
+					}
+				}
+			}
+
+			std::cout << "Countie" << " " << counter << std::endl;
+
+			if (counter == 2)
+			{
+				target->erase(myNigga[0], 1);
+				target->erase(static_cast<std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type>(myNigga[1]) - 1, 1);
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		};
+		
+		size_t index = (*winningCombinations[f]).find(*myFieldString);
+
+		std::string* myCopy = new std::string((*winningCombinations[f]));
+
+		if (m(myFieldString, myCopy))
 		{
-			auto* myStringCopy = winningCombinations[f];
-			myStringCopy->erase(index, myFieldString->length());
-			myLeftVector->push_back((*myStringCopy)[0]);
-			delete myStringCopy;
+			myLeftVector->push_back((*myCopy)[0]);
+			std::cout << "MMM" << "| " << *myCopy << std::endl;
+			delete myCopy;
+			std::cout << "=+=" << std::endl;
 		}
 	}
 
+	std::cout << myLeftVector->size() << 123123 << std::endl;
+
+
 	auto* unOccupiedFields = new std::vector<char>();
 
-	for (auto i = 0; i < 9; i++)
+	for (auto i = 0; i < 9; i++)	
 	{
 		auto field_ = (field)[i];
 
 		if (field_->occupied == nullptr)
 		{
-			unOccupiedFields->push_back(static_cast<char>(field_->coordinate - '0'));
+			unOccupiedFields->push_back(static_cast<char>(field_->coordinate + '0'));
+			std::cout << static_cast<char>(field_->coordinate + '0') << "||||||||" << std::endl;
 		}
 	}
+
+
 
 	for (auto k : *myLeftVector)
 	{
 		for (auto kk : *unOccupiedFields)
 		{
+			std::cout << k << kk << "[[[\n";
+
+
 			if (k == kk)
 			{
-				int r = kk - '0';
+				int r = static_cast<int>(kk - '0');
 
-				delete myLeftVector;
-
-				delete unOccupiedFields;
 
 				return r;
 			}
@@ -203,21 +345,265 @@ int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
 	}
 
 	delete myFieldString;
+
 	delete myLeftVector;
 
-	return (*unOccupiedFields)[0];
+	auto contains = [unOccupiedFields](int r)
+	{
+		if (std::find(unOccupiedFields->begin(), unOccupiedFields->end(), r) != unOccupiedFields->end())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	};
+
+	for (auto k : *myIntVector)
+	{
+		if (k == 0 || k == 2 || k == 6 || k == 8)
+		{
+			switch (k)
+			{
+			
+			case 0:
+				if (contains(0))
+				{
+					return 6;
+				}
+				break;
+
+			case 2 :
+				if (contains(2))
+				{
+					return 8;
+				}
+				break;
+
+			case 6:
+				if (contains(6))
+				{
+					return 0;
+				}
+				break;
+
+			case 8:
+
+				if (contains(8))
+				{
+					return 2;
+				}
+
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
+
+	return static_cast<int>((*unOccupiedFields)[0] + '0');
 }
 
-int AILogic::findTheBestMoveForAi_(AI*, Player* player, Field** field)
+int AILogic::findTheBestMoveForPLayer_(Player* ai, Field** field)
 {
-	return 0;
-}
+	auto unOccupied = new std::vector<char>();
+
+	auto* stringSet = new std::set<std::string*>{};
+
+	auto* myIntVector = new std::vector<int>{};// get the fields of the ai into a vector
+
+	myIntVector->assign(ai->playerFields, ai->playerFields + ai->occupied_fields);
+
+	std::sort(myIntVector->begin(), myIntVector->end());
+
+	for (int i = 0; i < myIntVector->size(); i++)
+	{
+		for (int j = 0; j < myIntVector->size(); j++)
+		{
+			if (i != j)
+			{
+
+				std::string f = "";
+
+				f += static_cast<char>(i + '0');
+
+				f += static_cast<char>(j + '0');
+
+				stringSet->insert(&f);
+			}
+		}
+	}
+
+	delete myIntVector;
+
+	for (auto myFieldString : *stringSet)
+	{
+		auto* myLeftVector = new std::vector<char>();
+
+		for (auto f = 0; f < 8; f++)
+		{
+
+			std::cout << *myFieldString << " " << *winningCombinations[f] << "{{\n";
+
+			auto m = [](std::string* num, std::string* target) {
+
+				int myNigga[2] = {};
+
+				int counter = 0;
+
+				for (int i = 0; i < (*target).size(); i++)
+				{
+					for (int j = 0; j < num->size(); j++)
+					{
+						std::cout << (*num)[j] << "|888|" << (*target)[i] << std::endl;
+
+						if ((*num)[j] == (*target)[i])
+						{
+							counter++;
+							if (counter == 1)
+							{
+								myNigga[0] = i;
+								std::cout << myNigga[0] << " SE" << std::endl;
+							}
+							else if (counter == 2)
+							{
+								myNigga[1] = i;
+								std::cout << myNigga[1] << " SE" << std::endl;
+
+							}
+						}
+					}
+				}
+
+				std::cout << "Countie" << " " << counter << std::endl;
+
+				if (counter == 2)
+				{
+					target->erase(myNigga[0], 1);
+					target->erase(static_cast<std::basic_string<char, std::char_traits<char>, std::allocator<char>>::size_type>(myNigga[1]) - 1, 1);
+
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			};
+
+			size_t index = (*winningCombinations[f]).find(*myFieldString);
+
+			std::string* myCopy = new std::string((*winningCombinations[f]));
+
+			if (m(myFieldString, myCopy))
+			{
+				myLeftVector->push_back((*myCopy)[0]);
+				std::cout << "MMM" << "| " << *myCopy << std::endl;
+				delete myCopy;
+				std::cout << "=+=" << std::endl;
+			}
+		}
+
+		std::cout << myLeftVector->size() << 123123 << std::endl;
+
+
+		auto* unOccupiedFields = new std::vector<char>();
+
+		unOccupied = unOccupiedFields;
+
+		for (auto i = 0; i < 9; i++)
+		{
+			auto field_ = (field)[i];
+
+			if (field_->occupied == nullptr)
+			{
+				unOccupiedFields->push_back(static_cast<char>(field_->coordinate + '0'));
+				std::cout << static_cast<char>(field_->coordinate + '0') << "||||||||" << std::endl;
+			}
+		}
 
 
 
+		for (auto k : *myLeftVector)
+		{
+			for (auto kk : *unOccupiedFields)
+			{
+				std::cout << k << kk << "[[[\n";
 
-int AILogic::findTheBestMoveForPLayer_(Player* player, Field** field)
-{
-	return 0;
+
+				if (k == kk)
+				{
+					int r = static_cast<int>(kk - '0');
+
+
+					return r;
+				}
+			}
+		}
+
+		delete myFieldString;
+
+		delete myLeftVector;
+
+		auto contains = [unOccupiedFields](int r)
+		{
+			if (std::find(unOccupiedFields->begin(), unOccupiedFields->end(), r) != unOccupiedFields->end())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		};
+
+		for (auto k : *myIntVector)
+		{
+			if (k == 0 || k == 2 || k == 6 || k == 8)
+			{
+				switch (k)
+				{
+
+				case 0:
+					if (contains(0))
+					{
+						return 6;
+					}
+					break;
+
+				case 2:
+					if (contains(2))
+					{
+						return 8;
+					}
+					break;
+
+				case 6:
+					if (contains(6))
+					{
+						return 0;
+					}
+					break;
+
+				case 8:
+
+					if (contains(8))
+					{
+						return 2;
+					}
+
+					break;
+
+				default:
+					break;
+				}
+			}
+		}
+
+		return static_cast<int>((*unOccupiedFields)[0] + '0');
+	}
+
+	return static_cast<int>((*unOccupied)[0] + '0');
 }
 

@@ -63,7 +63,7 @@ Player** PlayerInteraction::myPlayers()
         return new Player * (playerOne);
     }
 
-}
+}   
 
 PlayerInteraction::PlayerInteraction()
 {
@@ -158,6 +158,12 @@ void PlayerInteraction::AIInteraction(Field** myField, Player* playerOne, AI* ai
             int move = aiLogic->findTheBestMoveForAI(aiOne,playerOne,myField);
 
             std::cout << move << std::endl;
+
+            if (move == 999)
+            {
+                std::cout << "IT IS A DRAW!" << std::endl;
+                return;
+            }
 
             int check = gameLogic->occupy(myField, move, aiOne);
 

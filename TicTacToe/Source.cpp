@@ -39,8 +39,6 @@ int main()
 	else
 	{
 		p->AIInteraction(board, playerOne, ai);
-
-		// 
 	}
 
 }
