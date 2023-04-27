@@ -1,6 +1,15 @@
 #include "AILogic.h"
 #include <unordered_set>
 
+
+/// <summary>
+///		01 | 2 ||| 4 
+/// </summary>
+/// <param name="ai"></param>
+/// <param name="player"></param>
+/// <param name="field"></param>
+/// <returns></returns>
+
 int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 {
 
@@ -129,7 +138,7 @@ int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 		delete myLeftVector;
 
 		delete unOccupiedFields;
-
+ 
 		return findTheBestMoveForPLayer(player, field);
 	}
 	else if (ai->occupied_fields == 3)
@@ -153,7 +162,7 @@ int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 
 					f += static_cast<char>(i + '0');
 
-					f += static_cast<char>(j + '0');
+					f += static_cast<char>(j + '0'); 
 
 					stringSet->insert(&f);
 				}
@@ -175,7 +184,7 @@ int AILogic::findTheBestMoveForAI(AI* ai, Player* player, Field** field)
 					std::string** myStringCopy = new std::string * (winningCombinations[f]);
 					(*myStringCopy)->erase(index, myFieldString->length());
 					myLeftVector->push_back((*(*myStringCopy))[0]);
-						delete myStringCopy;
+					delete myStringCopy;
 				}
 			}
 
@@ -517,5 +526,6 @@ int AILogic::findTheBestMoveForPLayer_(Player* ai, Field** field)
 	}
 
 	return static_cast<int>((*unOccupied)[0] + '0');
+
 }
 

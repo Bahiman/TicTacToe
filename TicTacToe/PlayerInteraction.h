@@ -14,6 +14,6 @@ public:
 	void soutTheBoard(Field** myField);
 	void AIInteraction(Field** myField, Player* playerOne, AI* aiOne);
 private:
-	int validateChoice(); // Validates the choice
+	int validateChoice(); // Validates the choice	
 };
 

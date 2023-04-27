@@ -6,5 +6,4 @@ class AI : public Player
 {
 public:
 	virtual void operator()();
-
 };
