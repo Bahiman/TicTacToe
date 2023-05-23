@@ -249,6 +249,7 @@ int AILogic::findTheBestMoveForPLayer(Player* player, Field** field)
 	}
 
 
+
 	auto* myLeftVector = new std::vector<char>();
 
 	for (auto f = 0; f < 8; f++)
