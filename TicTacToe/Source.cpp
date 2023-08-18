@@ -5,13 +5,14 @@ int main()
 {
 	PlayerInteraction* p = new PlayerInteraction;
 
-	Player** players = (*p).myPlayers();
+	Player** players = p->myPlayers();
 
 	Player* playerOne = *players;
 
 	Player* playerTwo = nullptr;
 
 	bool dualPlayer = playerOne->mode == false;
+
 
 	if (dualPlayer)
 	{
